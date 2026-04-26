@@ -46,7 +46,7 @@ async function handleSubmit(event) {
           page++;
           showLoadMoreButton();
         } else if (totalPages === 1) {
-          return iziToast.warning({
+          iziToast.warning({
             position: 'topLeft',
             message:
               "We're sorry, but you've reached the end of search results.",
