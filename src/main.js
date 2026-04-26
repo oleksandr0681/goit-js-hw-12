@@ -92,6 +92,13 @@ function handleLoadMoreClick(event) {
     .then(response => {
       if (response.hits.length !== 0) {
         createGallery(response.hits);
+        const galleryItem = document.querySelector('.gallery-item');
+        const rectangle = galleryItem.getBoundingClientRect();
+        window.scrollBy({
+          top: rectangle.height * 2,
+          left: 0,
+          behavior: 'smooth',
+        });
       }
     })
     .catch(error => {
@@ -104,18 +111,6 @@ function handleLoadMoreClick(event) {
     .finally(() => {
       hideLoader();
     });
-  const galleryItem = document.querySelector('.gallery-item');
-  const rectangle = galleryItem.getBoundingClientRect();
-  const resizeObserver = new ResizeObserver(entries => {
-    for (const entry of entries) {
-      window.scrollBy({
-        top: rectangle.height * 2,
-        left: 0,
-        behavior: 'smooth',
-      });
-    }
-  });
-  resizeObserver.observe(gallery);
 
   page++;
   if (page > totalPages) {
