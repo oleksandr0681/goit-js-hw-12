@@ -43,7 +43,6 @@ async function handleSubmit(event) {
         totalImages = images.totalHits;
         const totalPages = Math.ceil(totalImages / limit);
         if (page < totalPages) {
-          page++;
           showLoadMoreButton();
         } else if (totalPages === 1) {
           iziToast.warning({
@@ -84,6 +83,7 @@ async function handleSubmit(event) {
 async function handleLoadMoreClick(event) {
   const totalPages = Math.ceil(totalImages / limit);
   hideLoadMoreButton();
+  page++;
   if (page > totalPages) {
     return iziToast.warning({
       position: 'topLeft',
@@ -114,14 +114,13 @@ async function handleLoadMoreClick(event) {
     hideLoader();
   }
 
-  page++;
-  if (page > totalPages) {
+  if (page === totalPages) {
     return iziToast.warning({
       position: 'topLeft',
       message: "We're sorry, but you've reached the end of search results.",
       timeout: 8000,
     });
-  } else {
+  } else if (page < totalPages) {
     showLoadMoreButton();
   }
 }
