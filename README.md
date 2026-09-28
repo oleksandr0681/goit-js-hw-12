@@ -1,113 +1,68 @@
-# Vanilla App Template
+# goit-js-hw-12
 
-Цей проект було створено за допомогою Vite. Для знайомства та налаштування
-додаткових можливостей [звернись до документації](https://vitejs.dev/).
+Homework assignment #12 from the [GoIT](https://goit.global/) JavaScript course. An image search app built with Vite that extends the previous task with **pagination**: it queries the [Pixabay API](https://pixabay.com/api/docs/) with [axios](https://axios-http.com/) using `async`/`await` and loads more results on demand with a "Load more" button.
 
-## Створення репозиторію за шаблоном
+## 📋 About
 
-Використовуй цей репозиторій організації GoIT як шаблон для створення
-репозиторію свого проекту. Для цього натисни на кнопку `«Use this template»` і
-обери опцію `«Create a new repository»`, як показано на зображенні.
+The user types a search term into the form and the app fetches matching photos from Pixabay, 15 per page:
 
-![Creating repo from a template step 1](./assets/template-step-1.png)
+- **Search form** — the query is trimmed and lowercased; if the field is empty, an iziToast warning is shown and no request is sent. Every new search resets the page counter, clears the gallery, and hides the "Load more" button.
+- **HTTP request** — an `async` function calls `axios.get` on `https://pixabay.com/api` with the query, `image_type=photo`, `orientation=horizontal`, `safesearch=true`, and the `page` / `per_page` parameters.
+- **Loader** — a spinner is shown while a request is in progress and hidden afterwards (`finally`).
+- **Gallery** — each result is rendered as a card with the thumbnail and its stats: likes, views, comments, and downloads. New pages are appended to the existing gallery via `insertAdjacentHTML`.
+- **Load more** — the button appears when more pages are available (total pages are calculated from `totalHits` and the page size). After each load, the page smoothly scrolls down by two gallery-card heights so the new images are visible.
+- **End of results** — when the last page is reached, the button is hidden and an iziToast message says there are no more results.
+- **Lightbox** — clicking a thumbnail opens the large image in a SimpleLightbox modal with the image tags as a caption; the lightbox is refreshed after every render.
+- **Notifications** — iziToast messages are shown for an empty field, no matches for the query, and request errors.
 
-На наступному етапі відкриється сторінка створення нового репозиторію. Заповни
-поле його імені, переконайся, що репозиторій публічний, після чого натисни
-кнопку `«Create repository from template»`.
+## 🛠️ Tech Stack
 
-![Creating repo from a template step 2](./assets/template-step-2.png)
+- Vanilla JavaScript (ES modules, `async`/`await`, DOM API)
+- HTML5 and CSS3 (modular stylesheets in `src/css`, CSS loader animation)
+- [Vite](https://vitejs.dev/) — dev server and bundler
+- [axios](https://github.com/axios/axios) — HTTP client
+- [SimpleLightbox](https://github.com/andreknieriem/simplelightbox) — image modal
+- [iziToast](https://github.com/marcelodolza/iziToast) — toast notifications
+- `vite-plugin-html-inject` and `vite-plugin-full-reload` — HTML partials and live reload
+- PostCSS (`postcss-sort-media-queries`, mobile-first sorting)
+- GitHub Actions — automatic deploy to GitHub Pages
 
-Після того, як репозиторій буде створено, необхідно перейти в налаштування
-створеного репозиторію на вкладку `Settings` > `Actions` > `General` як показано
-на зображенні.
+## 📁 Project Structure
 
-![Settings GitHub Actions permissions step 1](./assets/gh-actions-perm-1.png)
-
-Проскроливши сторінку до самого кінця, в секції `«Workflow permissions»` обери
-опцію `«Read and write permissions»` і постав галочку в чекбоксі. Це необхідно
-для автоматизації процесу деплою проекту.
-
-![Settings GitHub Actions permissions step 2](./assets/gh-actions-perm-2.png)
-
-Тепер у тебе є особистий репозиторій проекту, зі структурою файлів та папок
-репозиторію-шаблону. Далі працюй з ним, як з будь-яким іншим особистим
-репозиторієм, клонуй його собі на комп'ютер, пиши код, роби коміти та відправляй
-їх на GitHub.
-
-## Підготовка до роботи
-
-1. Переконайся, що на комп'ютері встановлено LTS-версію Node.js.
-   [Скачай та встанови](https://nodejs.org/en/) її якщо необхідно.
-2. Встанови базові залежності проекту в терміналі командою `npm install`.
-3. Запусти режим розробки, виконавши в терміналі команду `npm run dev`.
-4. Перейдіть у браузері за адресою
-   [http://localhost:5173](http://localhost:5173). Ця сторінка буде автоматично
-   перезавантажуватись після збереження змін у файли проекту.
-
-## Файли і папки
-
-- Файли розмітки компонентів сторінки повинні лежати в папці `src/partials` та
-  імпортуватись до файлу `index.html`. Наприклад, файл з розміткою хедера
-  `header.html` створюємо у папці `partials` та імпортуємо в `index.html`.
-- Файли стилів повинні лежати в папці `src/css` та імпортуватись до HTML-файлів
-  сторінок. Наприклад, для `index.html` файл стилів називається `index.css`.
-- Зображення додавай до папки `src/img`. Збирач оптимізує їх, але тільки при
-  деплої продакшн версії проекту. Все це відбувається у хмарі, щоб не
-  навантажувати твій комп'ютер, тому що на слабких компʼютерах це може зайняти
-  багато часу.
-
-## Деплой
-
-Продакшн версія проекту буде автоматично збиратися та деплоїтись на GitHub
-Pages, у гілку `gh-pages`, щоразу, коли оновлюється гілка `main`. Наприклад,
-після прямого пуша або прийнятого пул-реквесту. Для цього необхідно у файлі
-`package.json` змінити значення прапора `--base=/<REPO>/`, для команди `build`,
-замінивши `<REPO>` на назву свого репозиторію, та відправити зміни на GitHub.
-
-```json
-"build": "vite build --base=/<REPO>/",
+```
+goit-js-hw-12-main/
+├── .github/workflows/
+│   └── deploy.yml            # Build and deploy to GitHub Pages
+├── src/
+│   ├── index.html              # Page markup: form, gallery, "Load more", loader
+│   ├── main.js                   # Search and pagination logic
+│   ├── js/
+│   │   ├── pixabay-api.js         # Pixabay request (axios, page size)
+│   │   └── render-functions.js     # Gallery rendering, lightbox, loader and button helpers
+│   ├── css/                         # Page and component styles
+│   └── img/                          # Images and SVG sprite
+├── vite.config.js                  # Vite configuration
+└── package.json
 ```
 
-Далі необхідно зайти в налаштування GitHub-репозиторію (`Settings` > `Pages`) та
-виставити роздачу продакшн версії файлів з папки `/root` гілки `gh-pages`, якщо
-це не було зроблено автоматично.
+## 🚀 Getting Started
 
-![GitHub Pages settings](./assets/repo-settings.png)
+Requires an LTS version of [Node.js](https://nodejs.org/) and an internet connection (the app calls the Pixabay API).
 
-### Статус деплою
+```bash
+# Install dependencies
+npm install
 
-Статус деплою крайнього коміту відображається іконкою біля його ідентифікатора.
+# Start the dev server (http://localhost:5173)
+npm run dev
 
-- **Жовтий колір** - виконується збірка та деплой проекту.
-- **Зелений колір** - деплой завершився успішно.
-- **Червоний колір** - під час лінтингу, збірки чи деплою сталася помилка.
+# Build for production
+npm run build
 
-Більш детальну інформацію про статус можна переглянути натиснувши на іконку, і в
-вікні, що випадає, перейти за посиланням `Details`.
+# Preview the production build
+npm run preview
+```
 
-![Deployment status](./assets/deploy-status.png)
+## 📤 Deployment
 
-### Жива сторінка
-
-Через якийсь час, зазвичай кілька хвилин, живу сторінку можна буде подивитися за
-адресою, вказаною на вкладці `Settings` > `Pages` в налаштуваннях репозиторію.
-Наприклад, ось посилання на живу версію для цього репозиторію
-
-[https://goitacademy.github.io/vanilla-app-template/](https://goitacademy.github.io/vanilla-app-template/).
-
-Якщо відкриється порожня сторінка, переконайся, що у вкладці `Console` немає
-помилок пов'язаних з неправильними шляхами до CSS та JS файлів проекту
-(**404**). Швидше за все у тебе неправильне значення прапора `--base` для
-команди `build` у файлі `package.json`.
-
-## Як це працює
-
-![How it works](./assets/how-it-works.png)
-
-1. Після кожного пуша у гілку `main` GitHub-репозиторію, запускається
-   спеціальний скрипт (GitHub Action) із файлу `.github/workflows/deploy.yml`.
-2. Усі файли репозиторію копіюються на сервер, де проект ініціалізується та
-   проходить лінтинг та збірку перед деплоєм.
-3. Якщо всі кроки пройшли успішно, зібрана продакшн версія файлів проекту
-   відправляється у гілку `gh-pages`. В іншому випадку, у лозі виконання скрипта
-   буде вказано в чому проблема.
+The production build is deployed automatically to GitHub Pages (the `gh-pages` branch) on every push to `main`, via the workflow in `.github/workflows/deploy.yml`. The `build` script in `package.json` uses `--base=/goit-js-hw-12/`, which must match the repository name.
